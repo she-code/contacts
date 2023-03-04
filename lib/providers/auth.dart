@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:contacts/config/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class Auth with ChangeNotifier {
@@ -52,5 +53,29 @@ class Auth with ChangeNotifier {
     // _authoLogout();
 
     return true;
+  }
+
+  Future<void> register(String fname, String lname, String email,
+      String password, int phoneNo) async {
+    try {
+      final url = Uri.parse('${AppConstants.baseURl}/api/users/register');
+      final response = await http.post(url,
+          body: json.encode({
+            'firstName': fname,
+            'lastName': lname,
+            'email': email,
+            'password': password
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control_Allow_Origin": "*",
+            "accept": "application/json"
+          });
+      final reponseData = json.decode(response.body);
+      print(reponseData);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
   }
 }
