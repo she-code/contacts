@@ -6,6 +6,7 @@ import 'features/Auth/screens/login.dart';
 import 'features/Auth/screens/register.dart';
 import 'features/homePage/home.dart';
 import 'providers/auth.dart';
+import 'providers/contact.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,46 +31,52 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(
           //   create: (ctx) => PressProvider('', []),
           // ),
-          // ChangeNotifierProxyProvider<Auth, ContactProvider>(
-          //     update: (ctx, auth, previousState) => ContactProvider(
-          //         auth.token.toString(),
-          //         previousState == null ? [] : previousState.presses),
-          //     // PressProvider(auth.token!, previousState!.presses),
-          //     create: (_) => PressProvider('', []))
+          ChangeNotifierProxyProvider<Auth, ContactProvider>(
+              update: (ctx, auth, previousState) => ContactProvider(
+                  auth.token.toString(),
+                  previousState == null ? [] : previousState.contacts),
+              // PressProvider(auth.token!, previousState!.presses),
+              create: (_) => ContactProvider('', []))
         ],
-        child: Consumer<Auth>(
-            builder: (ctx, auth, _) => MaterialApp(
-                  title: 'Udhyog',
-                  theme: ThemeData(
-                      primaryColor: Colors.green,
-                      primaryColorDark: Colors.green[800],
-                      primaryColorLight: greenLight,
-                      colorScheme: ThemeData.light().colorScheme.copyWith(
-                          secondary: Colors.orange,
-                          primary: Colors.green,
-                          error: Colors.red)),
-                  home: auth.isAuth
-                      ? Home()
-                      : FutureBuilder(
-                          future: auth.tryAutoLogin(),
-                          builder: (ctx, authResultSnapshot) =>
-                              authResultSnapshot.connectionState ==
-                                      ConnectionState.waiting
-                                  ? SplashScreen()
+        child: Consumer<Auth>(builder: (ctx, auth, _) {
+          print({'from consumer', auth.isAuth});
+          return MaterialApp(
+            title: 'Contacts',
+            theme: ThemeData(
+                primaryColor: Colors.green,
+                primaryColorDark: Colors.green[800],
+                primaryColorLight: greenLight,
+                colorScheme: ThemeData.light().colorScheme.copyWith(
+                    secondary: Colors.orange,
+                    primary: Colors.green,
+                    error: Colors.red)),
 
-                                  ///: authResultSnapshot.data == false
-                                  : const Login()
-                          // : MainPage(),
-                          ),
+            home: Home(),
+            // auth.token != null
+            //     ? Home()
+            //     : FutureBuilder(
+            //         future: auth.tryAutoLogin(),
+            //         builder: (ctx, authResultSnapshot) {
+            //           print({'main', authResultSnapshot.data});
+            //           return authResultSnapshot.connectionState ==
+            //                   ConnectionState.waiting
+            //               ? SplashScreen()
 
-                  // initialRoute: '/login',
-                  routes: {
-                    '/home': (ctx) => Home(),
-                    Login.routeName: (ctx) => Login(),
-                    Register.routeName: (ctx) => Register(),
+            //               ///: authResultSnapshot.data == false
+            //               : const Login();
+            //         }
+            //         // : MainPage(),
+            //         ),
 
-                    //  AddPress.routeName:(ctx) => AddPress(),
-                  },
-                )));
+            // initialRoute: '/login',
+            routes: {
+              '/home': (ctx) => Home(),
+              Login.routeName: (ctx) => Login(),
+              Register.routeName: (ctx) => Register(),
+
+              //  AddPress.routeName:(ctx) => AddPress(),
+            },
+          );
+        }));
   }
 }

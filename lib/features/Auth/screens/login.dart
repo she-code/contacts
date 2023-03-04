@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
+import '../../../common/errorMsg.dart';
+import '../../../common/http_exception.dart';
+import '../../../providers/auth.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
@@ -16,6 +20,8 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
+  GlobalKey<FormState> _form = GlobalKey();
+  final Map<String, String> _authData = {'email': '', 'password': ''};
   var _isLoading = false;
   @override
   void dispose() {
@@ -23,6 +29,45 @@ class _LoginState extends State<Login> {
     super.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
+  }
+
+  Future submit() async {
+    if (!_form.currentState!.validate()) {
+      return;
+    }
+    _form.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      print({_authData});
+      await Provider.of<Auth>(context, listen: false).signin(
+          _authData['email'].toString(), _authData['password'].toString());
+    } on HttpException catch (e) {
+      var errorMessage = 'Authentication failed';
+      switch (e.toString()) {
+        case "Email already registered":
+          errorMessage = "Email already registered";
+          break;
+        case "User not found":
+          errorMessage = "User not found";
+          break;
+        case "Invalid email or password":
+          errorMessage = "Invalid email or password";
+          break;
+        default:
+          errorMessage = 'Authentication failed';
+          break;
+      }
+      ErrorMsg().showErrorDialog(errorMessage, context);
+    } catch (e) {
+      print({e.toString()});
+      const errorMessage = "Couldn't authenticate please try again";
+      ErrorMsg().showErrorDialog(e.toString(), context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -181,7 +226,7 @@ class _LoginState extends State<Login> {
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 18),
                             ),
-                            onPressed: () {},
+                            onPressed: submit,
                             //     () {
                             //   Navigator.of(context)
                             //       .pushReplacementNamed(MainPage.routeName);

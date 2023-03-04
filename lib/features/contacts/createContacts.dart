@@ -10,14 +10,14 @@ import 'package:provider/provider.dart';
 
 import '../../../common/http_exception.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
-  static String routeName = '/register';
+class CreateContact extends StatefulWidget {
+  const CreateContact({super.key});
+  static String routeName = '/CreateContact';
   @override
-  State<Register> createState() => _RegisterState();
+  State<CreateContact> createState() => _CreateContactState();
 }
 
-class _RegisterState extends State<Register> {
+class _CreateContactState extends State<CreateContact> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController fnameController = TextEditingController();
@@ -38,7 +38,6 @@ class _RegisterState extends State<Register> {
     'lname': '',
     'phoneNo': 0,
     'email': '',
-    'password': ''
   };
   @override
   void dispose() {
@@ -411,7 +410,7 @@ class _RegisterState extends State<Register> {
                                   borderRadius: BorderRadius.circular(20)),
                               child: ElevatedButton(
                                 child: Text(
-                                  "Sign up".toUpperCase(),
+                                  "Create".toUpperCase(),
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 18),
                                 ),
@@ -435,31 +434,6 @@ class _RegisterState extends State<Register> {
                             ),
                         ],
                       )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          margin: const EdgeInsets.only(right: 15),
-                          child: const Text(
-                            "Already have an account?",
-                            style: TextStyle(fontSize: 16),
-                          )),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(Login.routeName);
-                        },
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        style: TextButton.styleFrom(
-                            primary: Theme.of(context).primaryColorDark),
-                      ),
-                    ],
-                  ),
                 ],
               ))),
     );
