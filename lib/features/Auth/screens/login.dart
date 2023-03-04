@@ -102,149 +102,149 @@ class _LoginState extends State<Login> {
                     height: 20,
                   ),
                   Form(
+                      key: _form,
                       child: Column(
-                    children: [
-                      SizedBox(
-                        width: 400,
-                        child: TextFormField(
-                          focusNode: _emailFocusNode,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
+                        children: [
+                          SizedBox(
+                            width: 400,
+                            child: TextFormField(
+                              focusNode: _emailFocusNode,
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  // color: iconColor,
+                                  size: 20,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).errorColor,
+                                      width: 2),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 2),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.lightGreenAccent.shade400,
+                                      width: 1.5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: "Email",
+                                // border: Border.all(color: Colors.black12,width: 2),
+                              ),
+                              controller: emailController,
+                              validator: (value) {
+                                if (!value!.contains('@')) {
+                                  return 'Invalid email address';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _authData['email'] = value!;
+                              },
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_passwordFocusNode);
+                              },
                             ),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              // color: iconColor,
-                              size: 20,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).errorColor,
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.lightGreenAccent.shade400,
-                                  width: 1.5),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            labelText: "Email",
-                            // border: Border.all(color: Colors.black12,width: 2),
                           ),
-                          controller: emailController,
-                          validator: (value) {
-                            if (!value!.contains('@')) {
-                              return 'Invalid email address';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            // _authData['email'] = value!;
-                            print(value);
-                          },
-                          onFieldSubmitted: (_) {
-                            FocusScope.of(context)
-                                .requestFocus(_passwordFocusNode);
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: 400,
-                        child: TextFormField(
-                          focusNode: _passwordFocusNode,
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Colors.purpleAccent,
-                              size: 20,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).errorColor,
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.lightGreenAccent.shade400,
-                                  width: 1.5),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            labelText: "Password",
-                            // border: Border.all(color: Colors.black12,width: 2),
+                          SizedBox(
+                            height: 20,
                           ),
-                          controller: passwordController,
-                          validator: (value) {
-                            if (value!.length < 8) {
-                              return 'Password must atleast have 6 characters';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            // _authData['email'] = value!;
-                            print(value);
-                          },
-                          // onFieldSubmitted: (_) {
-                          //   FocusScope.of(context)
-                          //       .requestFocus(_passwordFocusNode);
-                          // },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      if (_isLoading)
-                        CircularProgressIndicator()
-                      else
-                        Container(
-                          width: 400,
-                          //padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: ElevatedButton(
-                            child: Text(
-                              "Sign in".toUpperCase(),
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 18),
+                          SizedBox(
+                            width: 400,
+                            child: TextFormField(
+                              focusNode: _passwordFocusNode,
+                              textInputAction: TextInputAction.done,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Colors.purpleAccent,
+                                  size: 20,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).errorColor,
+                                      width: 2),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 2),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.lightGreenAccent.shade400,
+                                      width: 1.5),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: "Password",
+                                // border: Border.all(color: Colors.black12,width: 2),
+                              ),
+                              controller: passwordController,
+                              validator: (value) {
+                                if (value!.length < 8) {
+                                  return 'Password must atleast have 6 characters';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _authData['password'] = value!;
+                              },
+                              // onFieldSubmitted: (_) {
+                              //   FocusScope.of(context)
+                              //       .requestFocus(_passwordFocusNode);
+                              // },
                             ),
-                            onPressed: submit,
-                            //     () {
-                            //   Navigator.of(context)
-                            //       .pushReplacementNamed(MainPage.routeName);
-                            // },
-                            style: ElevatedButton.styleFrom(
-                              elevation: 15,
-                              shadowColor: Colors.green,
-                              // padding: EdgeInsets.all(20),
-                              primary: Colors.green,
-                              minimumSize: const Size.fromHeight(50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          if (_isLoading)
+                            CircularProgressIndicator()
+                          else
+                            Container(
+                              width: 400,
+                              //padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: ElevatedButton(
+                                child: Text(
+                                  "Sign in".toUpperCase(),
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                                onPressed: submit,
+                                //     () {
+                                //   Navigator.of(context)
+                                //       .pushReplacementNamed(MainPage.routeName);
+                                // },
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 15,
+                                  shadowColor: Colors.green,
+                                  // padding: EdgeInsets.all(20),
+                                  primary: Colors.green,
+                                  minimumSize: const Size.fromHeight(50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                    ],
-                  )),
+                        ],
+                      )),
                   SizedBox(
                     height: 20,
                   ),

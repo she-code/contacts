@@ -1,8 +1,12 @@
+import 'package:contacts/features/contacts/createContacts.dart';
 import 'package:contacts/features/homePage/widgets/contactCards.dart';
+import 'package:contacts/providers/auth.dart';
+import 'package:contacts/providers/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,85 +17,132 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
+  Future<void> _refreshContacts(BuildContext context) async {
+    await Provider.of<ContactProvider>(context, listen: false).getContacts();
+  }
+
+  var _isLoading = false;
+  var _isinit = true;
+  void deleteContact(id) async {
+    await Provider.of<ContactProvider>(context, listen: false)
+        .deleteContact(id);
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isinit) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      Provider.of<ContactProvider>(context)
+          .getContacts()
+          .then((_) => setState(() {
+                _isLoading = false;
+              }));
+    }
+    _isinit = false;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final contacts =
+        Provider.of<ContactProvider>(context, listen: false).contacts;
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.only(top: 50),
-                //  height: 300,
-                // ScreenUtil().screenHeight,
-                child: Column(
-                  children: [
-                    Text('hhfld'),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Form(
-                        child: Container(
-                          // decoration: BoxDecoration(boxShadow: ),
-                          width: 400,
-                          child: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              fillColor: Colors.grey,
-                              focusColor: Colors.purple,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0),
+        body: RefreshIndicator(
+          onRefresh: () => _refreshContacts(context),
+          child: SingleChildScrollView(
+              child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(top: 50),
+                  //  height: 300,
+                  // ScreenUtil().screenHeight,
+                  child: Column(
+                    children: [
+                      Text('hhfld'),
+                      TextButton(
+                          onPressed: () async {
+                            await Provider.of<Auth>(context, listen: false)
+                                .logout();
+                          },
+                          child: Text('logout')),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Form(
+                          child: Container(
+                            // decoration: BoxDecoration(boxShadow: ),
+                            width: 400,
+                            child: TextFormField(
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                fillColor: Colors.grey,
+                                focusColor: Colors.purple,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  // color: iconColor,
+                                  size: 20,
+                                ),
+                                // errorBorder: OutlineInputBorder(
+                                //   borderSide: BorderSide(
+                                //       color: Theme.of(context).errorColor,
+                                //       width: 2),
+                                //   borderRadius: BorderRadius.circular(20.0),
+                                // ),
+                                // enabledBorder: OutlineInputBorder(
+                                //   borderSide:
+                                //       BorderSide(color: Colors.black, width: 1),
+                                //   borderRadius: BorderRadius.circular(20.0),
+                                // ),
+                                // focusedBorder: OutlineInputBorder(
+                                //   borderSide: BorderSide(
+                                //       color: Colors.lightGreenAccent.shade400,
+                                //       width: 1.5),
+                                //   borderRadius: BorderRadius.circular(20.0),
+                                // ),
+                                labelText: "Search",
+                                // border: Border.all(color: Colors.black12,width: 2),
                               ),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                // color: iconColor,
-                                size: 20,
-                              ),
-                              // errorBorder: OutlineInputBorder(
-                              //   borderSide: BorderSide(
-                              //       color: Theme.of(context).errorColor,
-                              //       width: 2),
-                              //   borderRadius: BorderRadius.circular(20.0),
-                              // ),
-                              // enabledBorder: OutlineInputBorder(
-                              //   borderSide:
-                              //       BorderSide(color: Colors.black, width: 1),
-                              //   borderRadius: BorderRadius.circular(20.0),
-                              // ),
-                              // focusedBorder: OutlineInputBorder(
-                              //   borderSide: BorderSide(
-                              //       color: Colors.lightGreenAccent.shade400,
-                              //       width: 1.5),
-                              //   borderRadius: BorderRadius.circular(20.0),
-                              // ),
-                              labelText: "Search",
-                              // border: Border.all(color: Colors.black12,width: 2),
+                              controller: searchController,
+                              validator: (value) {
+                                if (value!.length < 2) {
+                                  return 'Search field must atleast contain two characters';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                // _authData['email'] = value!;
+                                print(value);
+                              },
                             ),
-                            controller: searchController,
-                            validator: (value) {
-                              if (value!.length < 2) {
-                                return 'Search field must atleast contain two characters';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              // _authData['email'] = value!;
-                              print(value);
-                            },
                           ),
                         ),
                       ),
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: ((context, index) => ContactCards()),
-                      itemCount: 6,
-                    ),
-                    //),
-                    //   )
-                  ],
-                ))),
+                      _isLoading
+                          ? CircularProgressIndicator()
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: ((context, index) => ContactCards(
+                                  contacts[index].id,
+                                  contacts[index].fname,
+                                  contacts[index].lname,
+                                  contacts[index].email,
+                                  contacts[index].phoneNo)),
+                              itemCount: contacts.length,
+                            ),
+                      //),
+                      //   )
+                    ],
+                  ))),
+        ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: (() {}),
-        ));
+            child: Icon(Icons.add),
+            onPressed: (() =>
+                Navigator.of(context).pushNamed(CreateContact.routeName))));
   }
 }

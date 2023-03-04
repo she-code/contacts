@@ -2,7 +2,9 @@ import 'package:contacts/common/errorMsg.dart';
 import 'package:contacts/common/fieldGap.dart';
 import 'package:contacts/common/textfield/formTextField.dart';
 import 'package:contacts/features/Auth/screens/login.dart';
+import 'package:contacts/features/homePage/home.dart';
 import 'package:contacts/providers/auth.dart';
+import 'package:contacts/providers/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,7 +14,7 @@ import '../../../common/http_exception.dart';
 
 class CreateContact extends StatefulWidget {
   const CreateContact({super.key});
-  static String routeName = '/CreateContact';
+  static String routeName = '/createContact';
   @override
   State<CreateContact> createState() => _CreateContactState();
 }
@@ -60,12 +62,12 @@ class _CreateContactState extends State<CreateContact> {
     });
     try {
       print({_authData});
-      await Provider.of<Auth>(context, listen: false).register(
+      await Provider.of<ContactProvider>(context, listen: false).createContact(
           _authData['fname'].toString(),
           _authData['lname'].toString(),
           _authData['email'].toString(),
-          _authData['password'].toString(),
           int.parse(_authData['phoneNo']));
+      Navigator.of(context).pushReplacementNamed(Home.routeName);
     } on HttpException catch (e) {
       var errorMessage = 'Authentication failed';
       switch (e.toString()) {
@@ -96,34 +98,37 @@ class _CreateContactState extends State<CreateContact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          )),
       body: SingleChildScrollView(
           child: Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 80),
-              padding: EdgeInsets.all(25),
+              margin: const EdgeInsets.only(top: 25),
+              padding: const EdgeInsets.all(25),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Image.asset('assets/images/auth.png',
-                        fit: BoxFit.cover, width: 150),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
                     child: Text(
-                      ('Register'.toUpperCase()),
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                      ('Create Contact'.toUpperCase()),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 28),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const FieldGap(),
                   Form(
                       key: _form,
                       child: Column(
@@ -137,7 +142,7 @@ class _CreateContactState extends State<CreateContact> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.perm_identity,
                                   // color: iconColor,
                                   size: 20,
@@ -149,8 +154,8 @@ class _CreateContactState extends State<CreateContact> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: Colors.black, width: 2),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -178,7 +183,7 @@ class _CreateContactState extends State<CreateContact> {
                               },
                             ),
                           ),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
                             width: 400,
                             child: TextFormField(
@@ -188,7 +193,7 @@ class _CreateContactState extends State<CreateContact> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.person,
                                   // color: iconColor,
                                   size: 20,
@@ -200,8 +205,8 @@ class _CreateContactState extends State<CreateContact> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: Colors.black, width: 2),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -229,7 +234,7 @@ class _CreateContactState extends State<CreateContact> {
                               },
                             ),
                           ),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
                             width: 400,
                             child: TextFormField(
@@ -240,7 +245,7 @@ class _CreateContactState extends State<CreateContact> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.person,
                                   // color: iconColor,
                                   size: 20,
@@ -252,8 +257,8 @@ class _CreateContactState extends State<CreateContact> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: Colors.black, width: 2),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -287,7 +292,7 @@ class _CreateContactState extends State<CreateContact> {
                           //     nextNode: _emailFocusNode,
                           //     label: 'Phone',
                           //     data: _authData['phoneNo']),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
                             width: 400,
                             child: TextFormField(
@@ -297,7 +302,7 @@ class _CreateContactState extends State<CreateContact> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.person,
                                   // color: iconColor,
                                   size: 20,
@@ -309,8 +314,8 @@ class _CreateContactState extends State<CreateContact> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: Colors.black, width: 2),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -338,70 +343,10 @@ class _CreateContactState extends State<CreateContact> {
                               },
                             ),
                           ),
-                          FieldGap(),
-                          SizedBox(
-                            width: 400,
-                            child: TextFormField(
-                              focusNode: _passwordFocusNode,
-                              obscureText: passVisible ? true : false,
-                              textInputAction: TextInputAction.done,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.lock,
-                                  color: Colors.purpleAccent,
-                                  size: 20,
-                                ),
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        passVisible = !passVisible;
-                                      });
-                                    },
-                                    icon: passVisible
-                                        ? Icon(Icons.visibility_off)
-                                        : Icon(Icons.visibility)),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.lightGreenAccent.shade400,
-                                      width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                labelText: "Password",
-                                // border: Border.all(color: Colors.black12,width: 2),
-                              ),
-                              controller: passwordController,
-                              validator: (value) {
-                                if (value!.length < 8) {
-                                  return 'Password must atleast have 6 characters';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _authData['password'] = value!;
-                              },
-                              // onFieldSubmitted: (_) {
-                              //   FocusScope.of(context)
-                              //       .requestFocus(_passwordFocusNode);
-                              // },
-                            ),
-                          ),
-                          FieldGap(),
+                          const FieldGap(),
+
                           if (_isLoading)
-                            CircularProgressIndicator()
+                            const CircularProgressIndicator()
                           else
                             Container(
                               width: 400,

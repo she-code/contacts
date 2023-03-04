@@ -1,6 +1,6 @@
+import 'package:contacts/features/contacts/createContacts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'common/splashScreen/splash_screen.dart';
 import 'features/Auth/screens/login.dart';
 import 'features/Auth/screens/register.dart';
@@ -38,45 +38,42 @@ class MyApp extends StatelessWidget {
               // PressProvider(auth.token!, previousState!.presses),
               create: (_) => ContactProvider('', []))
         ],
-        child: Consumer<Auth>(builder: (ctx, auth, _) {
-          print({'from consumer', auth.isAuth});
-          return MaterialApp(
-            title: 'Contacts',
-            theme: ThemeData(
-                primaryColor: Colors.green,
-                primaryColorDark: Colors.green[800],
-                primaryColorLight: greenLight,
-                colorScheme: ThemeData.light().colorScheme.copyWith(
-                    secondary: Colors.orange,
-                    primary: Colors.green,
-                    error: Colors.red)),
+        child: Consumer<Auth>(
+            builder: (ctx, auth, _) => MaterialApp(
+                  title: 'Contacts',
+                  theme: ThemeData(
+                      primaryColor: Colors.green,
+                      primaryColorDark: Colors.green[800],
+                      primaryColorLight: greenLight,
+                      colorScheme: ThemeData.light().colorScheme.copyWith(
+                          secondary: Colors.orange,
+                          primary: Colors.green,
+                          error: Colors.red)),
 
-            home: Home(),
-            // auth.token != null
-            //     ? Home()
-            //     : FutureBuilder(
-            //         future: auth.tryAutoLogin(),
-            //         builder: (ctx, authResultSnapshot) {
-            //           print({'main', authResultSnapshot.data});
-            //           return authResultSnapshot.connectionState ==
-            //                   ConnectionState.waiting
-            //               ? SplashScreen()
+                  home: auth.isAuth
+                      ? Home()
+                      : FutureBuilder(
+                          future: auth.tryAutoLogin(),
+                          builder: (ctx, authResultSnapshot) {
+                            print({'main', authResultSnapshot.data});
+                            return authResultSnapshot.connectionState ==
+                                    ConnectionState.waiting
+                                ? SplashScreen()
 
-            //               ///: authResultSnapshot.data == false
-            //               : const Login();
-            //         }
-            //         // : MainPage(),
-            //         ),
+                                ///: authResultSnapshot.data == false
+                                : const Login();
+                          }
+                          // : MainPage(),
+                          ),
 
-            // initialRoute: '/login',
-            routes: {
-              '/home': (ctx) => Home(),
-              Login.routeName: (ctx) => Login(),
-              Register.routeName: (ctx) => Register(),
-
-              //  AddPress.routeName:(ctx) => AddPress(),
-            },
-          );
-        }));
+                  // initialRoute: '/login',
+                  routes: {
+                    '/home': (ctx) => Home(),
+                    Login.routeName: (ctx) => Login(),
+                    Register.routeName: (ctx) => Register(),
+                    CreateContact.routeName: (ctx) => CreateContact(),
+                    //  AddPress.routeName:(ctx) => AddPress(),
+                  },
+                )));
   }
 }

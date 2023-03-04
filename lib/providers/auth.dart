@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:contacts/config/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,10 +11,10 @@ class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
   String? userId;
-
+  Timer? _authTimer;
   //Timer? _authTimer;
   bool get isAuth {
-    return token != null;
+    return _token != null;
   }
 
   String? get token {
@@ -45,7 +46,7 @@ class Auth with ChangeNotifier {
       userId = extractedUserData['userId'].toString();
 
       // print({_token});
-      print({'from autologin', extractedUserData});
+      print({'from autologin', isAuth});
 
       notifyListeners();
     } on Exception catch (e) {
@@ -100,9 +101,8 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signin(String email, String password) async {
-    //final url = Uri.parse('http://localhost:5001/users/login');
     final url = Uri.parse('${AppConstants.baseURl}/api/users/login');
-    print({password, email});
+
     try {
       final response = await http.post(url,
           body: json.encode(
@@ -127,8 +127,8 @@ class Auth with ChangeNotifier {
       _expiryDate = DateTime.now()
           .add(Duration(seconds: int.parse(responseData['expiresIn'])));
 
-      print({responseData});
-      // print({"token", _token});
+      print({'response', responseData});
+      print({"token", _token});
 
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -147,5 +147,21 @@ class Auth with ChangeNotifier {
       print(e);
       throw e;
     }
+  }
+
+  Future<void> logout() async {
+    _expiryDate = null;
+    _token = null;
+    userId = null;
+
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+      _authTimer = null;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    // clear to clear all , remove to remove specific
+    prefs.remove('userData');
+    notifyListeners();
   }
 }
