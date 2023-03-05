@@ -1,9 +1,12 @@
+import 'package:basic_utils/basic_utils.dart';
 import 'package:contacts/features/contacts/contactDetail.dart';
 import 'package:contacts/features/homePage/home.dart';
 import 'package:contacts/providers/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class ContactCards extends StatefulWidget {
@@ -11,8 +14,10 @@ class ContactCards extends StatefulWidget {
   String fname;
   String lname;
   String email;
+  String note;
   int phoneNo;
-  ContactCards(this.id, this.fname, this.lname, this.email, this.phoneNo);
+  ContactCards(
+      this.id, this.fname, this.lname, this.email, this.note, this.phoneNo);
 
   @override
   State<ContactCards> createState() => _ContactCardsState();
@@ -44,7 +49,7 @@ class _ContactCardsState extends State<ContactCards> {
                 await Provider.of<ContactProvider>(context, listen: false)
                     .deleteContact(widget.id);
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Contact deleted")));
+                    const SnackBar(content: Text("Contact Deleted")));
 
                 Navigator.of(ctx).pop();
               },
@@ -122,18 +127,16 @@ class _ContactCardsState extends State<ContactCards> {
                         int.parse(phoneController.text),
                         widget.id);
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Press updated")));
-                print(fnameController.text);
-
+                    const SnackBar(content: Text("Contact Updated")));
                 Navigator.of(ctx).pop();
                 Navigator.of(context).pushReplacementNamed(Home.routeName);
               },
-              child: const Text('Update')),
+              child: const Text('UPDATE')),
           TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
-              child: const Text('Cancel'))
+              child: const Text('CANCEL'))
         ],
       ),
     );
@@ -141,37 +144,53 @@ class _ContactCardsState extends State<ContactCards> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => Navigator.of(context)
-            .pushNamed(ContactDetails.routeName, arguments: widget.id),
-        child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(15)),
-            margin: EdgeInsets.only(bottom: 7),
-            height: 80,
-            child: ListTile(
-              leading: const CircleAvatar(child: Icon(Icons.person)),
-              title: Text(widget.fname),
-              trailing: SizedBox(
-                width: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Slidable(
+        startActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              key: ValueKey(widget.id),
+              onPressed: (_) {
+                deleteContact();
+              },
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+            ),
+            SlidableAction(
+              onPressed: (_) {
+                updateContact();
+              },
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              icon: Icons.edit,
+            ),
+          ],
+        ),
+        child: GestureDetector(
+            onTap: () => Navigator.of(context)
+                .pushNamed(ContactDetails.routeName, arguments: widget.id),
+            child: Container(
+                margin: EdgeInsets.only(bottom: 7),
+                //  height: 80,
+                child: Column(
                   children: [
-                    IconButton(
-                        onPressed: deleteContact,
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        )),
-                    IconButton(
-                        onPressed: updateContact,
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.green,
-                        ))
+                    ListTile(
+                      leading: CircleAvatar(
+                          radius: 22,
+                          child:
+                              Text(widget.fname.substring(0, 1).toUpperCase())),
+                      title: Text(
+                        '${StringUtils.capitalize(widget.fname)} ${StringUtils.capitalize(widget.lname)}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(StringUtils.capitalize(widget.note)),
+                      trailing: Icon(Icons.star_border_outlined),
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                    )
                   ],
-                ),
-              ),
-            )));
+                ))));
   }
 }

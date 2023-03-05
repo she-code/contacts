@@ -22,9 +22,17 @@ class Auth with ChangeNotifier {
         _expiryDate!.isAfter(DateTime.now()) &&
         _token != null) {
       print({"tok", _expiryDate});
-      return _token;
     }
-    return null;
+    return _token;
+  }
+
+  void _autoLogout() {
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+    }
+    final timeToExpiry = _expiryDate!.difference(DateTime.now()).inSeconds;
+    print(timeToExpiry);
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 
   Future<bool> tryAutoLogin() async {
@@ -46,14 +54,18 @@ class Auth with ChangeNotifier {
       userId = extractedUserData['userId'].toString();
 
       // print({_token});
-      print({'from autologin', isAuth});
+      print({
+        'from autologin',
+        extractedUserData['token'].toString(),
+        {_token}
+      });
 
       notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
       // TODO
     }
-    // _authoLogout();
+    //_autoLogout();
 
     return true;
   }
@@ -83,8 +95,9 @@ class Auth with ChangeNotifier {
       }
       _token = reponseData['token'];
       userId = reponseData['_id'].toString();
-      _expiryDate = DateTime.now()
-          .add(Duration(seconds: int.parse(reponseData['expiresIn'])));
+      final decodedjwt = json.decode(
+          ascii.decode(base64.decode(base64.normalize(_token!.split(".")[1]))));
+      _expiryDate = DateTime.now().add(Duration(seconds: decodedjwt['exp']));
       print({"_expir", _expiryDate});
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -124,11 +137,13 @@ class Auth with ChangeNotifier {
 
       _token = responseData['token'];
       userId = responseData['_id'].toString();
+      final decodedjwt = json.decode(
+          ascii.decode(base64.decode(base64.normalize(_token!.split(".")[1]))));
       _expiryDate = DateTime.now()
           .add(Duration(seconds: int.parse(responseData['expiresIn'])));
 
-      print({'response', responseData});
-      print({"token", _token});
+      print({'response', _expiryDate});
+      print({"token", decodedjwt});
 
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -149,6 +164,22 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> getUserDetails() async {
+    try {
+      final url = Uri.parse('${AppConstants.baseURl}/api/users/me');
+      final response = await http.get(url, headers: {
+        "Content-Type": "application/json",
+        "Access-Control_Allow_Origin": "*",
+        "Authorization": _token!
+      });
+      final responseData = json.encode(response.body);
+      print(responseData);
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<void> logout() async {
     _expiryDate = null;
     _token = null;
@@ -162,6 +193,7 @@ class Auth with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     // clear to clear all , remove to remove specific
     prefs.remove('userData');
+    print({"_token logout", _token});
     notifyListeners();
   }
 }

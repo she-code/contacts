@@ -1,4 +1,6 @@
+import 'package:contacts/common/button/actionBtn.dart';
 import 'package:contacts/common/fieldGap.dart';
+import 'package:contacts/common/text/formTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,6 +25,8 @@ class _LoginState extends State<Login> {
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
   GlobalKey<FormState> _form = GlobalKey();
+  var passVisible = true;
+
   final Map<String, String> _authData = {'email': '', 'password': ''};
   var _isLoading = false;
   @override
@@ -65,7 +69,7 @@ class _LoginState extends State<Login> {
     } catch (e) {
       print({e.toString()});
       const errorMessage = "Couldn't authenticate please try again";
-      ErrorMsg().showErrorDialog(e.toString(), context);
+      ErrorMsg().showErrorDialog(errorMessage, context);
     }
     setState(() {
       _isLoading = false;
@@ -84,21 +88,8 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 200.w,
-                    alignment: Alignment.center,
-                    child: Image.asset('assets/images/auth.png',
-                        fit: BoxFit.cover, width: 150.w),
-                  ),
                   const FieldGap(),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      ('Login'.toUpperCase()),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 28.sp),
-                    ),
-                  ),
+                  FormTitle("Login"),
                   const FieldGap(),
                   Form(
                       key: _form,
@@ -114,8 +105,8 @@ class _LoginState extends State<Login> {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.person,
-                                  // color: iconColor,
+                                  Icons.email,
+                                  color: Colors.purple,
                                   size: 20.w,
                                 ),
                                 errorBorder: OutlineInputBorder(
@@ -146,7 +137,7 @@ class _LoginState extends State<Login> {
                                 return null;
                               },
                               onSaved: (value) {
-                                _authData['email'] = value!;
+                                _authData['email'] = value!.trim();
                               },
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
@@ -159,6 +150,7 @@ class _LoginState extends State<Login> {
                             width: 400.w,
                             child: TextFormField(
                               focusNode: _passwordFocusNode,
+                              obscureText: passVisible ? true : false,
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -169,6 +161,15 @@ class _LoginState extends State<Login> {
                                   color: Colors.purpleAccent,
                                   size: 20.w,
                                 ),
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        passVisible = !passVisible;
+                                      });
+                                    },
+                                    icon: passVisible
+                                        ? const Icon(Icons.visibility)
+                                        : const Icon(Icons.visibility_off)),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
@@ -199,39 +200,13 @@ class _LoginState extends State<Login> {
                               onSaved: (value) {
                                 _authData['password'] = value!;
                               },
-                              // onFieldSubmitted: (_) {
-                              //   FocusScope.of(context)
-                              //       .requestFocus(_passwordFocusNode);
-                              // },
                             ),
                           ),
                           const FieldGap(),
                           if (_isLoading)
                             const CircularProgressIndicator()
                           else
-                            Container(
-                              width: 400.w,
-                              //padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: ElevatedButton(
-                                onPressed: submit,
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 15,
-                                  shadowColor: Colors.green,
-                                  backgroundColor: Colors.green,
-                                  minimumSize: Size.fromHeight(50.h),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Sign in".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18.sp),
-                                ),
-                              ),
-                            ),
+                            ActionBtn("Sing In", submit)
                         ],
                       )),
                   const FieldGap(),

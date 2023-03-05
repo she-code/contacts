@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'common/splashScreen/splash_screen.dart';
 import 'features/Auth/screens/login.dart';
+import 'features/Auth/screens/profile.dart';
 import 'features/Auth/screens/register.dart';
 import 'features/homePage/home.dart';
 import 'providers/auth.dart';
@@ -42,12 +43,12 @@ class MyApp extends StatelessWidget {
                   builder: (ctx, auth, _) => MaterialApp(
                         title: 'Contacts',
                         theme: ThemeData(
-                            primaryColor: Colors.green,
-                            primaryColorDark: Colors.green[800],
+                            primaryColor: Colors.purple,
+                            primaryColorDark: Colors.purple[800],
                             primaryColorLight: greenLight,
                             colorScheme: ThemeData.light().colorScheme.copyWith(
-                                secondary: Colors.orange,
-                                primary: Colors.green,
+                                secondary: Colors.purple.shade200,
+                                primary: Colors.purple.shade600,
                                 error: Colors.red)),
                         home: auth.isAuth
                             ? const Home()
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
                           '/home': (ctx) => const Home(),
                           Login.routeName: (ctx) => const Login(),
                           Register.routeName: (ctx) => const Register(),
+                          Profile.routeName: (ctx) => const Profile(),
                           CreateContact.routeName: (ctx) =>
                               const CreateContact(),
                           ContactDetails.routeName: (ctx) =>

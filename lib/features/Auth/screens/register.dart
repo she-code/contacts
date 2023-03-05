@@ -1,5 +1,6 @@
 import 'package:contacts/common/errorMsg.dart';
 import 'package:contacts/common/fieldGap.dart';
+import 'package:contacts/common/text/formTitle.dart';
 import 'package:contacts/common/textfield/formTextField.dart';
 import 'package:contacts/features/Auth/screens/login.dart';
 import 'package:contacts/features/homePage/home.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/button/actionBtn.dart';
 import '../../../common/http_exception.dart';
 
 class Register extends StatefulWidget {
@@ -33,7 +35,7 @@ class _RegisterState extends State<Register> {
   FocusNode _phoneFocusNode = FocusNode();
 
   var _isLoading = false;
-  var passVisible = false;
+  var passVisible = true;
   final GlobalKey<FormState> _form = GlobalKey();
   final Map<String, dynamic> _authData = {
     'fname': '',
@@ -109,15 +111,7 @@ class _RegisterState extends State<Register> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    // margin: EdgeInsets.only(top: 50),
-                    child: Text(
-                      ('Register'.toUpperCase()),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 28.sp),
-                    ),
-                  ),
+                  FormTitle("Register"),
                   const FieldGap(),
                   Form(
                       key: _form,
@@ -134,7 +128,7 @@ class _RegisterState extends State<Register> {
                                 ),
                                 prefixIcon: const Icon(
                                   Icons.perm_identity,
-                                  // color: iconColor,
+                                  color: Colors.purple,
                                   size: 20,
                                 ),
                                 errorBorder: OutlineInputBorder(
@@ -185,7 +179,7 @@ class _RegisterState extends State<Register> {
                                 ),
                                 prefixIcon: const Icon(
                                   Icons.person,
-                                  // color: iconColor,
+                                  color: Colors.purple,
                                   size: 20,
                                 ),
                                 errorBorder: OutlineInputBorder(
@@ -237,7 +231,7 @@ class _RegisterState extends State<Register> {
                                 ),
                                 prefixIcon: const Icon(
                                   Icons.phone,
-                                  // color: iconColor,
+                                  color: Colors.purple,
                                   size: 20,
                                 ),
                                 errorBorder: OutlineInputBorder(
@@ -294,7 +288,7 @@ class _RegisterState extends State<Register> {
                                 ),
                                 prefixIcon: const Icon(
                                   Icons.email,
-                                  // color: iconColor,
+                                  color: Colors.purple,
                                   size: 20,
                                 ),
                                 errorBorder: OutlineInputBorder(
@@ -325,7 +319,7 @@ class _RegisterState extends State<Register> {
                                 return null;
                               },
                               onSaved: (value) {
-                                _authData['email'] = value!;
+                                _authData['email'] = value!.trim();
                               },
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
@@ -356,8 +350,8 @@ class _RegisterState extends State<Register> {
                                       });
                                     },
                                     icon: passVisible
-                                        ? const Icon(Icons.visibility_off)
-                                        : const Icon(Icons.visibility)),
+                                        ? const Icon(Icons.visibility)
+                                        : const Icon(Icons.visibility_off)),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
@@ -394,34 +388,7 @@ class _RegisterState extends State<Register> {
                           if (_isLoading)
                             const CircularProgressIndicator()
                           else
-                            Container(
-                              width: 400.w,
-                              // padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: ElevatedButton(
-                                onPressed: submit,
-                                //     () {
-                                //   Navigator.of(context)
-                                //       .pushReplacementNamed(MainPage.routeName);
-                                // },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 15,
-                                  shadowColor: Colors.green,
-                                  // padding: EdgeInsets.all(20),
-                                  foregroundColor: Colors.green,
-                                  minimumSize: Size.fromHeight(50.h),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Sign up".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18.sp),
-                                ),
-                              ),
-                            ),
+                            ActionBtn("Sing Up", submit)
                         ],
                       )),
                   const FieldGap(),

@@ -19,8 +19,8 @@ class ContactProvider with ChangeNotifier {
 
   ContactProvider(this._authToken, this._contacts);
 
-  Future<void> createContact(
-      String fname, String lname, String email, int phoneNo) async {
+  Future<void> createContact(String fname, String lname, String email,
+      String note, int phoneNo) async {
     try {
       final url = Uri.parse('${AppConstants.baseURl}/api/contacts/create');
       final response = await http.post(url,
@@ -28,7 +28,8 @@ class ContactProvider with ChangeNotifier {
             'firstName': fname,
             'lastName': lname,
             'email': email,
-            'phoneNo': phoneNo
+            'phoneNo': phoneNo,
+            'note': note
           }),
           headers: {
             "Content-Type": "application/json",
@@ -111,7 +112,7 @@ class ContactProvider with ChangeNotifier {
       final List<Contact> contacts = contactList.contacts;
 
       _contacts = contacts;
-      print({'contacts': data['contacts']});
+      //  print({'o': _authToken});
       notifyListeners();
     } catch (e) {
       rethrow;

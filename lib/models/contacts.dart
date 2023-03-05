@@ -2,6 +2,7 @@ class Contact {
   String fname;
   String lname;
   String email;
+  String note;
   int phoneNo;
   String id;
   Contact(
@@ -9,6 +10,7 @@ class Contact {
       required this.id,
       required this.lname,
       required this.email,
+      required this.note,
       required this.phoneNo});
 
   factory Contact.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Contact {
         email: json['email'],
         phoneNo: json['phoneNo'],
         fname: json['firstName'],
+        note: json['note'],
         lname: json['lastName']);
   }
 }
