@@ -13,6 +13,10 @@ class ContactProvider with ChangeNotifier {
     return [..._contacts];
   }
 
+  Contact findByID(String id) {
+    return _contacts.firstWhere((prod) => prod.id == id);
+  }
+
   ContactProvider(this._authToken, this._contacts);
 
   Future<void> createContact(
@@ -108,6 +112,27 @@ class ContactProvider with ChangeNotifier {
 
       _contacts = contacts;
       print({'contacts': data['contacts']});
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getContactDetail(String id) async {
+    try {
+      final url = Uri.parse('${AppConstants.baseURl}/api/contacts/$id');
+      final response = await http.get(url, headers: {
+        "Content-Type": "application/json",
+        "Access-Control_Allow_Origin": "*",
+        "Authorization": _authToken
+      });
+      final responseData = json.decode(response.body);
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      // ContactList contactList = ContactList.fromJson(data['contact']);
+      // final List<Contact> contacts = contactList.contacts;
+
+      // _contacts = contacts;
+      print({'contacts': data});
       notifyListeners();
     } catch (e) {
       rethrow;

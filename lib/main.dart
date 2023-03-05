@@ -1,5 +1,7 @@
+import 'package:contacts/features/contacts/contactDetail.dart';
 import 'package:contacts/features/contacts/createContacts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'common/splashScreen/splash_screen.dart';
 import 'features/Auth/screens/login.dart';
@@ -16,7 +18,7 @@ void main() {
 //MzVihCR05CyhFXF7ppliRYnw //keysecret
 class MyApp extends StatelessWidget {
   //const MyApp({Key? key}) : super(key: key);
-  Color greenLight = Color(0xff63d47a);
+  Color greenLight = const Color(0xff63d47a);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -25,55 +27,51 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider.value(
             value: Auth(),
           ),
-          // ChangeNotifierProvider.value(
-          //   value: OrderProvider(),
-          // ),
-          // ChangeNotifierProvider(
-          //   create: (ctx) => PressProvider('', []),
-          // ),
           ChangeNotifierProxyProvider<Auth, ContactProvider>(
               update: (ctx, auth, previousState) => ContactProvider(
                   auth.token.toString(),
                   previousState == null ? [] : previousState.contacts),
-              // PressProvider(auth.token!, previousState!.presses),
               create: (_) => ContactProvider('', []))
         ],
-        child: Consumer<Auth>(
-            builder: (ctx, auth, _) => MaterialApp(
-                  title: 'Contacts',
-                  theme: ThemeData(
-                      primaryColor: Colors.green,
-                      primaryColorDark: Colors.green[800],
-                      primaryColorLight: greenLight,
-                      colorScheme: ThemeData.light().colorScheme.copyWith(
-                          secondary: Colors.orange,
-                          primary: Colors.green,
-                          error: Colors.red)),
+        child: ScreenUtilInit(
+            designSize: const Size(360, 690),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return Consumer<Auth>(
+                  builder: (ctx, auth, _) => MaterialApp(
+                        title: 'Contacts',
+                        theme: ThemeData(
+                            primaryColor: Colors.green,
+                            primaryColorDark: Colors.green[800],
+                            primaryColorLight: greenLight,
+                            colorScheme: ThemeData.light().colorScheme.copyWith(
+                                secondary: Colors.orange,
+                                primary: Colors.green,
+                                error: Colors.red)),
+                        home: auth.isAuth
+                            ? const Home()
+                            : FutureBuilder(
+                                future: auth.tryAutoLogin(),
+                                builder: (ctx, authResultSnapshot) {
+                                  print({'main', authResultSnapshot.data});
+                                  return authResultSnapshot.connectionState ==
+                                          ConnectionState.waiting
+                                      ? const SplashScreen()
 
-                  home: auth.isAuth
-                      ? Home()
-                      : FutureBuilder(
-                          future: auth.tryAutoLogin(),
-                          builder: (ctx, authResultSnapshot) {
-                            print({'main', authResultSnapshot.data});
-                            return authResultSnapshot.connectionState ==
-                                    ConnectionState.waiting
-                                ? SplashScreen()
-
-                                ///: authResultSnapshot.data == false
-                                : const Login();
-                          }
-                          // : MainPage(),
-                          ),
-
-                  // initialRoute: '/login',
-                  routes: {
-                    '/home': (ctx) => Home(),
-                    Login.routeName: (ctx) => Login(),
-                    Register.routeName: (ctx) => Register(),
-                    CreateContact.routeName: (ctx) => CreateContact(),
-                    //  AddPress.routeName:(ctx) => AddPress(),
-                  },
-                )));
+                                      ///: authResultSnapshot.data == false
+                                      : const Login();
+                                }),
+                        routes: {
+                          '/home': (ctx) => const Home(),
+                          Login.routeName: (ctx) => const Login(),
+                          Register.routeName: (ctx) => const Register(),
+                          CreateContact.routeName: (ctx) =>
+                              const CreateContact(),
+                          ContactDetails.routeName: (ctx) =>
+                              const ContactDetails(),
+                        },
+                      ));
+            }));
   }
 }

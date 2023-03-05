@@ -17,15 +17,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
-  Future<void> _refreshContacts(BuildContext context) async {
-    await Provider.of<ContactProvider>(context, listen: false).getContacts();
-  }
 
   var _isLoading = false;
   var _isinit = true;
-  void deleteContact(id) async {
-    await Provider.of<ContactProvider>(context, listen: false)
-        .deleteContact(id);
+  Color backG = const Color(0xFFE6E7E9);
+
+  Future<void> _refreshContacts(BuildContext context) async {
+    await Provider.of<ContactProvider>(context, listen: false).getContacts();
   }
 
   @override
@@ -51,60 +49,83 @@ class _HomeState extends State<Home> {
     final contacts =
         Provider.of<ContactProvider>(context, listen: false).contacts;
     return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black87,
+            actions: [
+              Container(
+                  decoration: BoxDecoration(
+                      color: backG, borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.all(13),
+                  //padding: EdgeInsets.all(8),
+                  // width: 12,
+                  // height: 12,
+                  child: const Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 20,
+                  )),
+              Container(
+                  decoration: BoxDecoration(
+                      color: backG, borderRadius: BorderRadius.circular(5)),
+                  margin: const EdgeInsets.all(15),
+                  //padding: EdgeInsets.all(8),
+                  width: 30,
+                  // height: 12,
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.grey,
+                    size: 20,
+                  )),
+            ],
+            leading: const CircleAvatar(child: Icon(Icons.person)),
+            title: const Text(
+              "Dashboard",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+            ),
+            centerTitle: true,
+          ),
+        ),
         body: RefreshIndicator(
           onRefresh: () => _refreshContacts(context),
           child: SingleChildScrollView(
               child: Container(
+                  color: backG,
                   alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.only(top: 50),
-                  //  height: 300,
-                  // ScreenUtil().screenHeight,
+                  padding: EdgeInsets.all(10.w),
+                  margin: EdgeInsets.only(top: 50.h),
                   child: Column(
                     children: [
-                      Text('hhfld'),
+                      const Text('hhfld'),
                       TextButton(
                           onPressed: () async {
                             await Provider.of<Auth>(context, listen: false)
                                 .logout();
                           },
-                          child: Text('logout')),
+                          child: const Text('logout')),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Form(
-                          child: Container(
+                          child: SizedBox(
                             // decoration: BoxDecoration(boxShadow: ),
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 fillColor: Colors.grey,
                                 focusColor: Colors.purple,
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.search,
                                   // color: iconColor,
                                   size: 20,
                                 ),
-                                // errorBorder: OutlineInputBorder(
-                                //   borderSide: BorderSide(
-                                //       color: Theme.of(context).errorColor,
-                                //       width: 2),
-                                //   borderRadius: BorderRadius.circular(20.0),
-                                // ),
-                                // enabledBorder: OutlineInputBorder(
-                                //   borderSide:
-                                //       BorderSide(color: Colors.black, width: 1),
-                                //   borderRadius: BorderRadius.circular(20.0),
-                                // ),
-                                // focusedBorder: OutlineInputBorder(
-                                //   borderSide: BorderSide(
-                                //       color: Colors.lightGreenAccent.shade400,
-                                //       width: 1.5),
-                                //   borderRadius: BorderRadius.circular(20.0),
-                                // ),
+
                                 labelText: "Search",
                                 // border: Border.all(color: Colors.black12,width: 2),
                               ),
@@ -124,7 +145,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       _isLoading
-                          ? CircularProgressIndicator()
+                          ? const CircularProgressIndicator()
                           : ListView.builder(
                               shrinkWrap: true,
                               itemBuilder: ((context, index) => ContactCards(
@@ -141,8 +162,8 @@ class _HomeState extends State<Home> {
                   ))),
         ),
         floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
             onPressed: (() =>
-                Navigator.of(context).pushNamed(CreateContact.routeName))));
+                Navigator.of(context).pushNamed(CreateContact.routeName)),
+            child: const Icon(Icons.add)));
   }
 }

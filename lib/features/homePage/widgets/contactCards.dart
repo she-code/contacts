@@ -1,3 +1,4 @@
+import 'package:contacts/features/contacts/contactDetail.dart';
 import 'package:contacts/features/homePage/home.dart';
 import 'package:contacts/providers/contact.dart';
 import 'package:flutter/material.dart';
@@ -36,23 +37,23 @@ class _ContactCardsState extends State<ContactCards> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Contact will be deleted"),
-        content: Text("Are you sure?"),
+        content: const Text("Are you sure?"),
         actions: [
           TextButton(
               onPressed: () async {
                 await Provider.of<ContactProvider>(context, listen: false)
                     .deleteContact(widget.id);
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Contact deleted")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Contact deleted")));
 
                 Navigator.of(ctx).pop();
               },
-              child: Text('Delete')),
+              child: const Text('Delete')),
           TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
-              child: Text('Cancel'))
+              child: const Text('Cancel'))
         ],
       ),
     );
@@ -62,52 +63,53 @@ class _ContactCardsState extends State<ContactCards> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Update Press"),
-        content: SizedBox(
-          height: 250,
-          child: Form(
-              key: _form,
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "First Name",
+        title: const Text("Update Contact"),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            child: Form(
+                key: _form,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "First Name",
+                      ),
+                      controller: fnameController..text = widget.fname,
+                      onSaved: (newValue) {
+                        _contactData['fname'] = newValue!;
+                      },
                     ),
-                    controller: fnameController..text = widget.fname,
-                    onSaved: (newValue) {
-                      _contactData['fname'] = newValue!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Last Name",
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "Last Name",
+                      ),
+                      controller: lnameController..text = widget.lname,
+                      onSaved: (newValue) {
+                        _contactData['lname'] = newValue!;
+                      },
                     ),
-                    controller: lnameController..text = widget.lname,
-                    onSaved: (newValue) {
-                      _contactData['lname'] = newValue!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Email",
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "Email",
+                      ),
+                      controller: emailController..text = widget.email,
+                      onSaved: (newValue) {
+                        _contactData['email'] = newValue!;
+                      },
                     ),
-                    controller: emailController..text = widget.email,
-                    onSaved: (newValue) {
-                      _contactData['email'] = newValue!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Phone",
-                    ),
-                    controller: phoneController
-                      ..text = widget.phoneNo.toString(),
-                    onSaved: (newValue) {
-                      _contactData['phoneNo'] = newValue!;
-                    },
-                  )
-                ],
-              )),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "Phone",
+                      ),
+                      controller: phoneController
+                        ..text = widget.phoneNo.toString(),
+                      onSaved: (newValue) {
+                        _contactData['phoneNo'] = newValue!;
+                      },
+                    )
+                  ],
+                )),
+          ),
         ),
         actions: [
           TextButton(
@@ -119,19 +121,19 @@ class _ContactCardsState extends State<ContactCards> {
                         emailController.text,
                         int.parse(phoneController.text),
                         widget.id);
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text("Press updated")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Press updated")));
                 print(fnameController.text);
 
                 Navigator.of(ctx).pop();
                 Navigator.of(context).pushReplacementNamed(Home.routeName);
               },
-              child: Text('Update')),
+              child: const Text('Update')),
           TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
-              child: Text('Cancel'))
+              child: const Text('Cancel'))
         ],
       ),
     );
@@ -140,33 +142,36 @@ class _ContactCardsState extends State<ContactCards> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        child: ListTile(
-      title: Text(widget.fname),
-      leading: CircleAvatar(child: Icon(Icons.person)),
-      trailing: Container(
-        width: 100,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-                // onPressed: () async {
-                //   await Provider.of<ContactProvider>(context)
-                //       .updateContact(fname, lname, email, phoneNo, id);
-                // },
-                onPressed: deleteContact,
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                )),
-            IconButton(
-                onPressed: updateContact,
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.green,
-                ))
-          ],
-        ),
-      ),
-    ));
+        onTap: () => Navigator.of(context)
+            .pushNamed(ContactDetails.routeName, arguments: widget.id),
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(15)),
+            margin: EdgeInsets.only(bottom: 7),
+            height: 80,
+            child: ListTile(
+              leading: const CircleAvatar(child: Icon(Icons.person)),
+              title: Text(widget.fname),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                        onPressed: deleteContact,
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        )),
+                    IconButton(
+                        onPressed: updateContact,
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.green,
+                        ))
+                  ],
+                ),
+              ),
+            )));
   }
 }

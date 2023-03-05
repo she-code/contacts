@@ -1,6 +1,8 @@
+import 'package:contacts/common/fieldGap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/errorMsg.dart';
@@ -76,65 +78,62 @@ class _LoginState extends State<Login> {
       body: SingleChildScrollView(
           child: Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 80),
-              padding: EdgeInsets.all(25),
+              margin: EdgeInsets.only(top: 80.h),
+              padding: EdgeInsets.all(25.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                    width: 200.w,
                     alignment: Alignment.center,
                     child: Image.asset('assets/images/auth.png',
-                        fit: BoxFit.cover, width: 150),
+                        fit: BoxFit.cover, width: 150.w),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const FieldGap(),
                   Container(
                     alignment: Alignment.center,
                     child: Text(
                       ('Login'.toUpperCase()),
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 28.sp),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const FieldGap(),
                   Form(
                       key: _form,
                       child: Column(
                         children: [
                           SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               focusNode: _emailFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.person,
                                   // color: iconColor,
-                                  size: 20,
+                                  size: 20.w,
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 2.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
                                       width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 labelText: "Email",
                                 // border: Border.all(color: Colors.black12,width: 2),
@@ -155,39 +154,37 @@ class _LoginState extends State<Login> {
                               },
                             ),
                           ),
+                          const FieldGap(),
                           SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               focusNode: _passwordFocusNode,
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 prefixIcon: Icon(
                                   Icons.lock,
                                   color: Colors.purpleAccent,
-                                  size: 20,
+                                  size: 20.w,
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 2.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
                                       width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 labelText: "Password",
                                 // border: Border.all(color: Colors.black12,width: 2),
@@ -208,76 +205,67 @@ class _LoginState extends State<Login> {
                               // },
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          const FieldGap(),
                           if (_isLoading)
-                            CircularProgressIndicator()
+                            const CircularProgressIndicator()
                           else
                             Container(
-                              width: 400,
+                              width: 400.w,
                               //padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)),
+                                  borderRadius: BorderRadius.circular(10)),
                               child: ElevatedButton(
-                                child: Text(
-                                  "Sign in".toUpperCase(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
                                 onPressed: submit,
-                                //     () {
-                                //   Navigator.of(context)
-                                //       .pushReplacementNamed(MainPage.routeName);
-                                // },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 15,
                                   shadowColor: Colors.green,
-                                  // padding: EdgeInsets.all(20),
-                                  primary: Colors.green,
-                                  minimumSize: const Size.fromHeight(50),
+                                  backgroundColor: Colors.green,
+                                  minimumSize: Size.fromHeight(50.h),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
+                                ),
+                                child: Text(
+                                  "Sign in".toUpperCase(),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.sp),
                                 ),
                               ),
                             ),
                         ],
                       )),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const FieldGap(),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          margin: const EdgeInsets.only(right: 15),
-                          child: const Text(
+                          margin: EdgeInsets.only(right: 15.w),
+                          child: Text(
                             "Don't have an account?",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16.sp),
                           )),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pushNamed(Register.routeName);
                         },
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 16),
-                        ),
                         style: TextButton.styleFrom(
-                            primary: Theme.of(context).primaryColorDark),
+                            foregroundColor:
+                                Theme.of(context).primaryColorDark),
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(fontSize: 16.sp),
+                        ),
                       ),
                     ],
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: const Text(
-                      'Forgot password?',
-                      style: TextStyle(fontSize: 16),
-                    ),
                     style: TextButton.styleFrom(
-                        primary: Theme.of(context).primaryColorDark),
+                        foregroundColor: Theme.of(context).primaryColorDark),
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
                   )
                 ],
               ))),

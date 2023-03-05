@@ -2,10 +2,12 @@ import 'package:contacts/common/errorMsg.dart';
 import 'package:contacts/common/fieldGap.dart';
 import 'package:contacts/common/textfield/formTextField.dart';
 import 'package:contacts/features/Auth/screens/login.dart';
+import 'package:contacts/features/homePage/home.dart';
 import 'package:contacts/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/http_exception.dart';
@@ -67,6 +69,7 @@ class _RegisterState extends State<Register> {
           _authData['email'].toString(),
           _authData['password'].toString(),
           int.parse(_authData['phoneNo']));
+      Navigator.of(context).pushReplacementNamed(Home.routeName);
     } on HttpException catch (e) {
       var errorMessage = 'Authentication failed';
       switch (e.toString()) {
@@ -100,45 +103,36 @@ class _RegisterState extends State<Register> {
       body: SingleChildScrollView(
           child: Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 80),
-              padding: EdgeInsets.all(25),
+              margin: EdgeInsets.only(top: 50.h),
+              padding: EdgeInsets.all(25.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Image.asset('assets/images/auth.png',
-                        fit: BoxFit.cover, width: 150),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
+                    // margin: EdgeInsets.only(top: 50),
                     child: Text(
                       ('Register'.toUpperCase()),
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 28.sp),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const FieldGap(),
                   Form(
                       key: _form,
                       child: Column(
                         children: [
                           SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               focusNode: _fnameFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.perm_identity,
                                   // color: iconColor,
                                   size: 20,
@@ -146,22 +140,22 @@ class _RegisterState extends State<Register> {
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
-                                      width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 labelText: "First Name",
-                                // border: Border.all(color: Colors.black12,width: 2),
+                                // border: Border.all(color: Colors.black12,width:1.w),
                               ),
                               controller: fnameController,
                               validator: (value) {
@@ -179,17 +173,17 @@ class _RegisterState extends State<Register> {
                               },
                             ),
                           ),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               focusNode: _lnameFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.person,
                                   // color: iconColor,
                                   size: 20,
@@ -197,22 +191,22 @@ class _RegisterState extends State<Register> {
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
-                                      width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 labelText: "Last Name",
-                                // border: Border.all(color: Colors.black12,width: 2),
+                                // border: Border.all(color: Colors.black12,width:1.w),
                               ),
                               controller: lnameController,
                               validator: (value) {
@@ -230,41 +224,41 @@ class _RegisterState extends State<Register> {
                               },
                             ),
                           ),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               keyboardType: TextInputType.number,
                               focusNode: _phoneFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(
-                                  Icons.person,
+                                prefixIcon: const Icon(
+                                  Icons.phone,
                                   // color: iconColor,
                                   size: 20,
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
-                                      width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 labelText: "Phone",
-                                // border: Border.all(color: Colors.black12,width: 2),
+                                // border: Border.all(color: Colors.black12,width:1.w),
                               ),
                               controller: phoneController,
                               validator: (value) {
@@ -288,40 +282,40 @@ class _RegisterState extends State<Register> {
                           //     nextNode: _emailFocusNode,
                           //     label: 'Phone',
                           //     data: _authData['phoneNo']),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               focusNode: _emailFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(
-                                  Icons.person,
+                                prefixIcon: const Icon(
+                                  Icons.email,
                                   // color: iconColor,
                                   size: 20,
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
-                                      width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 labelText: "Email",
-                                // border: Border.all(color: Colors.black12,width: 2),
+                                // border: Border.all(color: Colors.black12,width:1.w),
                               ),
                               controller: emailController,
                               validator: (value) {
@@ -339,18 +333,18 @@ class _RegisterState extends State<Register> {
                               },
                             ),
                           ),
-                          FieldGap(),
+                          const FieldGap(),
                           SizedBox(
-                            width: 400,
+                            width: 400.w,
                             child: TextFormField(
                               focusNode: _passwordFocusNode,
                               obscureText: passVisible ? true : false,
                               textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.lock,
                                   color: Colors.purpleAccent,
                                   size: 20,
@@ -362,27 +356,27 @@ class _RegisterState extends State<Register> {
                                       });
                                     },
                                     icon: passVisible
-                                        ? Icon(Icons.visibility_off)
-                                        : Icon(Icons.visibility)),
+                                        ? const Icon(Icons.visibility_off)
+                                        : const Icon(Icons.visibility)),
                                 errorBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).errorColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 2),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.lightGreenAccent.shade400,
-                                      width: 1.5),
-                                  borderRadius: BorderRadius.circular(20.0),
+                                      width: 1.w),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 labelText: "Password",
-                                // border: Border.all(color: Colors.black12,width: 2),
+                                // border: Border.all(color: Colors.black12,width:1.w),
                               ),
                               controller: passwordController,
                               validator: (value) {
@@ -394,27 +388,18 @@ class _RegisterState extends State<Register> {
                               onSaved: (value) {
                                 _authData['password'] = value!;
                               },
-                              // onFieldSubmitted: (_) {
-                              //   FocusScope.of(context)
-                              //       .requestFocus(_passwordFocusNode);
-                              // },
                             ),
                           ),
-                          FieldGap(),
+                          const FieldGap(),
                           if (_isLoading)
-                            CircularProgressIndicator()
+                            const CircularProgressIndicator()
                           else
                             Container(
-                              width: 400,
+                              width: 400.w,
                               // padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20)),
                               child: ElevatedButton(
-                                child: Text(
-                                  "Sign up".toUpperCase(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
                                 onPressed: submit,
                                 //     () {
                                 //   Navigator.of(context)
@@ -424,39 +409,42 @@ class _RegisterState extends State<Register> {
                                   elevation: 15,
                                   shadowColor: Colors.green,
                                   // padding: EdgeInsets.all(20),
-                                  primary: Colors.green,
-                                  minimumSize: const Size.fromHeight(50),
+                                  foregroundColor: Colors.green,
+                                  minimumSize: Size.fromHeight(50.h),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
+                                ),
+                                child: Text(
+                                  "Sign up".toUpperCase(),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.sp),
                                 ),
                               ),
                             ),
                         ],
                       )),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const FieldGap(),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          margin: const EdgeInsets.only(right: 15),
-                          child: const Text(
+                          margin: EdgeInsets.only(right: 15.w),
+                          child: Text(
                             "Already have an account?",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16.sp),
                           )),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pushNamed(Login.routeName);
                         },
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(fontSize: 16),
-                        ),
                         style: TextButton.styleFrom(
-                            primary: Theme.of(context).primaryColorDark),
+                            foregroundColor:
+                                Theme.of(context).primaryColorDark),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(fontSize: 16.sp),
+                        ),
                       ),
                     ],
                   ),
